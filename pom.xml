@@ -13,14 +13,13 @@
     <url>http://maven.apache.org</url>
 
     <properties>
-        <!-- Минимум Java 17 для Tomcat 11 -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
-        <!-- Servlet API (дается контейнером → scope provided) -->
+        <!-- Jakarta Servlet API (от контейнера) -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -28,7 +27,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JSP API -->
+        <!-- JSP API (от контейнера) -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -36,7 +35,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- JSTL (если используешь теги <c:...>) -->
+        <!-- JSTL (если используешь теги c:...) -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -50,7 +49,28 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- JUnit (для тестов) -->
+        <!-- Guice core -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+
+        <!-- Guice Servlet extension (поддержка Jakarta servlet namespace) -->
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-servlet</artifactId>
+            <version>7.0.0</version>
+        </dependency>
+
+        <!-- Jakarta Inject (обычно тянется транзитивно, но добавим явно) -->
+        <dependency>
+            <groupId>jakarta.inject</groupId>
+            <artifactId>jakarta.inject-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+
+        <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -62,7 +82,6 @@
     <build>
         <finalName>java_web</finalName>
         <plugins>
-            <!-- Maven compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -73,7 +92,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven war plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -84,5 +102,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -1,4 +1,4 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<div style="border-bottom:1px solid #ccc; padding:8px 0; margin-bottom:16px;">
-    <h2>Header</h2>
+<div style="background:#ffe6f0; padding:15px; border-bottom:2px solid #cc6699;">
+    <h2 style="margin:0; color:#cc3366; text-align:center;">Java Web Project</h2>
 </div>
