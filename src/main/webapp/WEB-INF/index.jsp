@@ -109,6 +109,28 @@
         </p>
     </div>
 
+    <div class="card">
+        <h2>Database Time</h2>
+        <p style="margin-bottom:12px;">Current date-time directly from MySQL:</p>
+
+        <form style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <input type="text"
+                   value="<%= request.getAttribute("DbTime") %>"
+                   readonly
+                   style="flex:1; padding:10px 14px; border:2px solid #cc6699; border-radius:8px;
+                  font-size:1.2em; color:#cc3366; background:#fffafc; font-weight:bold;"/>
+            <button type="button"
+                    onclick="location.reload()"
+                    style="padding:10px 18px; border:none; border-radius:8px; background:#cc6699;
+                   color:#fff; font-size:1em; cursor:pointer; transition:0.2s;">
+                Refresh
+            </button>
+        </form>
+
+        <p style="margin-top:10px; color:#888; font-size:0.9em;">
+            This is the time according to the database server
+        </p>
+    </div>
 
     <div class="card">
         <h2>About Java</h2>
