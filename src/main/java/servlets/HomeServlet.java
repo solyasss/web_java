@@ -35,10 +35,12 @@ public class HomeServlet extends HttpServlet
                 "Hello from HomeServlet "
                         + kdfService.dk("123", "")
                         + "<br/>"
-                        + dataAccessor.getDbIdentity()
+                        + (dataAccessor.install() ? "Install OK" : "Install error" )
+                        + "<br/>"
+                        + (dataAccessor.seed() ? "Seed OK" : "Seed error" )
         );
 
-        req.setAttribute("DbTime", String.valueOf(dataAccessor.getDbTime()));
+
 
         req.getRequestDispatcher("/WEB-INF/index.jsp").forward(req, resp);
     }
