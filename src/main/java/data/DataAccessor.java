@@ -1,10 +1,13 @@
 package data;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import data.dto.AccessToken;
 import data.dto.User;
 import data.dto.UserAccess;
 import services.config.ConfigService;
 import services.kdf.KdfService;
+import java.util.Date;
+
 
 import java.sql.*;
 import java.util.UUID;
@@ -25,6 +28,74 @@ public class DataAccessor {
         this.configService = configService;
         this.logger = logger;
         this.kdfService = kdfService;
+    }
+
+
+    public AccessToken getTokenByUserAccess(UserAccess ua) {
+        AccessToken at = new AccessToken();
+        at.setTokenId(UUID.randomUUID());
+        at.setIssuedAt(new Date());
+        at.setExpiredAt(new Date(at.getIssuedAt().getTime() + 1000 * 60 * 10));
+        at.setUserAccessId(ua.getId());
+        at.setUserAccess(ua);
+
+        String sqlCheck = """
+        SELECT token_id, expired_at 
+        FROM tokens 
+        WHERE user_access_id = ? 
+          AND expired_at > NOW()
+        ORDER BY expired_at DESC
+        LIMIT 1
+    """;
+
+        String sql;
+        boolean updateMode = false;
+
+        try (PreparedStatement prep = this.getConnection().prepareStatement(sqlCheck)) {
+            prep.setString(1, ua.getId().toString());
+            ResultSet rs = prep.executeQuery();
+            if (rs.next()) {
+                updateMode = true;
+                at.setTokenId(UUID.fromString(rs.getString("token_id")));
+                at.setIssuedAt(new Date());
+                at.setExpiredAt(new Date(at.getIssuedAt().getTime() + 1000 * 60 * 10));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.WARNING, "DataAccessor::getTokenByUserAccess-check "
+                    + ex.getMessage() + " | " + sqlCheck);
+        }
+
+        if (updateMode) {
+            sql = """
+            UPDATE tokens 
+            SET issued_at = ?, expired_at = ?
+            WHERE token_id = ?
+        """;
+        } else {
+            sql = """
+            INSERT INTO tokens(token_id,user_access_id,issued_at,expired_at)
+            VALUES(?,?,?,?)
+        """;
+        }
+
+        try (PreparedStatement prep = this.getConnection().prepareStatement(sql)) {
+            if (updateMode) {
+                prep.setTimestamp(1, new Timestamp(at.getIssuedAt().getTime()));
+                prep.setTimestamp(2, new Timestamp(at.getExpiredAt().getTime()));
+                prep.setString(3, at.getTokenId().toString());
+            } else {
+                prep.setString(1, at.getTokenId().toString());
+                prep.setString(2, at.getUserAccessId().toString());
+                prep.setTimestamp(3, new Timestamp(at.getIssuedAt().getTime()));
+                prep.setTimestamp(4, new Timestamp(at.getExpiredAt().getTime()));
+            }
+            prep.executeUpdate();
+        } catch (SQLException ex) {
+            logger.log(Level.WARNING, "DataAccessor::getTokenByUserAccess "
+                    + ex.getMessage() + " | " + sql);
+        }
+
+        return at;
     }
 
     public UserAccess getUserAccessByCredentials(String login, String password) {
