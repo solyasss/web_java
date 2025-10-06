@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import services.config.ConfigService;
 import services.kdf.KdfService;
+import services.signatures.SignatureService;
 import services.timestamp.TimeStampService;
 
 import java.io.IOException;
@@ -18,11 +19,13 @@ public class HomeServlet extends HttpServlet
 {
     private final DataAccessor dataAccessor;
     private final KdfService kdfService;
+    private final SignatureService signatureService;
 
     @Inject
-    public HomeServlet(KdfService kdfService, DataAccessor dataAccessor) {
+    public HomeServlet(KdfService kdfService, DataAccessor dataAccessor, SignatureService signatureService) {
         this.kdfService = kdfService;
         this.dataAccessor = dataAccessor;
+        this.signatureService = signatureService;
     }
 
 
@@ -35,9 +38,13 @@ public class HomeServlet extends HttpServlet
                 "Hello from HomeServlet "
                         + kdfService.dk("123", "")
                         + "<br/>"
-                        + (dataAccessor.install() ? "Install OK" : "Install error" )
+//                        + (dataAccessor.install() ? "Install OK" : "Install error" )
                         + "<br/>"
-                        + (dataAccessor.seed() ? "Seed OK" : "Seed error" )
+//                        + (dataAccessor.seed() ? "Seed OK" : "Seed error" )
+                +(signatureService.getSignatureHex("123","456"))
+                        + "<br/>JWT: " + req.getAttribute("JWT")
+                        + "<br/>JwtStatus: " + req.getAttribute("JwtStatus")
+
         );
 
 
