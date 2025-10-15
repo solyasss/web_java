@@ -4,8 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
+public class UserAccess
+{
 
-public class UserAccess {
     private UUID id;
     private UUID userId;
     private String roleId;
@@ -17,15 +18,18 @@ public class UserAccess {
 
     public static UserAccess fromResultSet(ResultSet rs) throws SQLException {
         UserAccess ua = new UserAccess();
-        ua.setId(UUID.fromString( rs.getString("ua_id") ));
-        ua.setUserId(UUID.fromString( rs.getString("user_id") ));
-        ua.setRoleId( rs.getString("role_id") );
-        ua.setLogin( rs.getString("login") );
-        ua.setSalt( rs.getString("salt") );
-        ua.setDk( rs.getString("dk") );
+        ua.setId(UUID.fromString(rs.getString("ua_id")));
+        ua.setUserId(UUID.fromString(rs.getString("user_id")));
+        ua.setRoleId(rs.getString("role_id"));
+        ua.setLogin(rs.getString("login"));
+        ua.setSalt(rs.getString("salt"));
+        ua.setDk(rs.getString("dk"));
 
-        try { ua.setUser( User.fromResultSet(rs) ); }
-        catch(SQLException ignore){}
+        try {
+            ua.setUser(User.fromResultSet(rs));
+        } catch (SQLException ignore) {
+
+        }
 
         return ua;
     }
@@ -85,6 +89,5 @@ public class UserAccess {
     public void setDk(String dk) {
         this.dk = dk;
     }
-
 
 }

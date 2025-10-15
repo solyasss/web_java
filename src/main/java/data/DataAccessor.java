@@ -2,14 +2,18 @@ package data;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import data.dto.AccessToken;
+import data.dto.ProductGroup;
 import data.dto.User;
 import data.dto.UserAccess;
 import services.config.ConfigService;
 import services.kdf.KdfService;
+
+import java.util.ArrayList;
 import java.util.Date;
 
 
 import java.sql.*;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -318,4 +322,29 @@ public class DataAccessor {
 
         return true;
     }
+
+    public List<ProductGroup> adminGetProductGroups() {
+        String sql = "SELECT * FROM product_groups";
+        List<ProductGroup> ret = new ArrayList<>();
+        try (Statement statement = getConnection().createStatement();
+             ResultSet rs = statement.executeQuery(sql)
+        ) {
+            while (rs.next()) {
+                ret.add(ProductGroup.fromResultSet(rs));
+            }
+            rs.close();
+        } catch (SQLException ex) {
+            logger.log(Level.WARNING, "DataAccessor::adminGetProductGroups"
+                    + ex.getMessage() + " | " + sql);
+
+        }
+        return ret;
+    }
+
+    public void adminAddProductGroups() {
+
+    }
 }
+
+
+

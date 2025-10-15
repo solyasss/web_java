@@ -96,6 +96,13 @@
             <version>2.13.2</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-fileupload2-jakarta-servlet6 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
+            <version>2.0.0-M4</version>
+        </dependency>
+
         <!-- MySQL Connector/J -->
         <dependency>
             <groupId>com.mysql</groupId>

@@ -8,22 +8,32 @@ import java.util.UUID;
 
 public class AccessToken
 {
+
     private UUID tokenId;
     private UUID userAccessId;
     private Date issuedAt;
     private Date expiredAt;
 
-
     private UserAccess userAccess;
 
-    public UserAccess getUserAccess() {
-        return userAccess;
-    }
+    public static AccessToken fromResultSet(ResultSet rs) throws SQLException {
+        AccessToken t = new AccessToken();
+        t.setTokenId(UUID.fromString(rs.getString("token_id")));
+        t.setTokenId(UUID.fromString(rs.getString("user_access_id")));
+        Timestamp timestamp;
+        timestamp = rs.getTimestamp("issued_at");
+        t.setIssuedAt(new Date(timestamp.getTime()));
+        timestamp = rs.getTimestamp("expired_at");
+        t.setExpiredAt(new Date(timestamp.getTime()));
 
-    public void setUserAccess(UserAccess userAccess) {
-        this.userAccess = userAccess;
-    }
+        try {
+            t.setUserAccess(UserAccess.fromResultSet(rs));
+        } catch (SQLException ignore) {
 
+        }
+
+        return t;
+    }
 
     public UUID getTokenId() {
         return tokenId;
@@ -57,25 +67,14 @@ public class AccessToken
         this.expiredAt = expiredAt;
     }
 
-
-    public static AccessToken fromResultSet(ResultSet rs) throws SQLException
-    {
-        AccessToken t = new AccessToken();
-        t.setTokenId(UUID.fromString(rs.getString("token_id")));
-        t.setTokenId(UUID.fromString(rs.getString("user_access_id")));
-        Timestamp timestamp;
-        timestamp = rs.getTimestamp("issued_at");
-        t.setIssuedAt(new Date( timestamp.getTime() ));
-        timestamp = rs.getTimestamp("expired_at");
-        t.setExpiredAt(new Date( timestamp.getTime() ));
-
-        try { t.setUserAccess(UserAccess.fromResultSet(rs)); }
-        catch(SQLException ignore) {}
-
-        return t;
+    public UserAccess getUserAccess() {
+        return userAccess;
     }
 
-
-
+    public void setUserAccess(UserAccess userAccess) {
+        this.userAccess = userAccess;
+    }
 
 }
+
+
