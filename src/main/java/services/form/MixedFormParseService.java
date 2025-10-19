@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.fileupload2.core.DiskFileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
 import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.FileUploadException;
 import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletDiskFileUpload;
 
 
@@ -18,13 +20,12 @@ public class MixedFormParseService implements FormParseService {
     private JakartaServletDiskFileUpload upload;
 
     @Inject
-    public MixedFormParseService()
-    {
+    public MixedFormParseService() {
         //DiskFileItemFactory  factory = new DiskFileItemFactory();
         //factory.setSizeThreshold(100000);
         upload = new JakartaServletDiskFileUpload();
         upload.setFileCountMax(10);
-        upload.setFileSizeMax(1000000);
+        upload.setFileSizeMax(10000000);
         upload.setSizeMax((long)1e7);
     }
 
@@ -50,14 +51,13 @@ public class MixedFormParseService implements FormParseService {
                         );
                     }
                 }
-            }
-            catch (IOException ex) {
+            } catch (IOException ex) {
                 throw new FormParseException(ex.getMessage());
             }
         }
         else {
             Enumeration<String> names = request.getParameterNames();
-            while( names.hasMoreElements() ) {
+            while(names.hasMoreElements()) {
                 String name = names.nextElement();
                 fields.put(name, request.getParameter(name));
             }

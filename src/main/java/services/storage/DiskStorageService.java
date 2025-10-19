@@ -1,16 +1,14 @@
 package services.storage;
 
-import org.apache.commons.fileupload2.core.FileItem;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+import org.apache.commons.fileupload2.core.FileItem;
 
-public class DiskStorageService implements StorageService
-{
-
+public class DiskStorageService implements StorageService {
     private String storagePath = "C:/storage/Java222/";
 
     @Override
@@ -20,17 +18,13 @@ public class DiskStorageService implements StorageService
         if (dotIndex < 0) {
             throw new IOException("File without extension not allowed");
         }
-
         String ext = name.substring(dotIndex);
         String savedName;
         File file;
-
         do {
-            savedName = UUID.randomUUID() + ext;
-            String savedPath = storagePath + savedName;
-            file = new File(savedPath);
+            savedName = UUID.randomUUID().toString() + ext;
+            file = new File(storagePath, savedName);
         } while (file.exists());
-
         item.write(file.toPath());
         return savedName;
     }
@@ -44,5 +38,7 @@ public class DiskStorageService implements StorageService
             throw new IOException("File not found");
         }
     }
-
 }
+
+
+

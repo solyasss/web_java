@@ -6,8 +6,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
-public class ProductGroup
-{
+public class ProductGroup {
 
     private UUID id;
     private UUID parentId;
@@ -17,11 +16,13 @@ public class ProductGroup
     private String imageUrl;
     private Date deletedAt;
 
-    public static ProductGroup fromResultSet(ResultSet rs) throws SQLException
-    {
+    public static ProductGroup fromResultSet(ResultSet rs) throws SQLException {
         ProductGroup pg = new ProductGroup();
         pg.setId(UUID.fromString(rs.getString("pg_id")));
-        pg.setParentId(UUID.fromString(rs.getString("pg_parent_id")));
+        String parentId = rs.getString("pg_parent_id");
+        if(parentId != null) {
+            pg.setParentId(UUID.fromString(parentId));
+        }
         pg.setName(rs.getString("pg_name"));
         pg.setDescription(rs.getString("pg_description"));
         pg.setSlug(rs.getString("pg_slug"));
